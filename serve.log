@@ -1,0 +1,18 @@
+ INFO  Accepting connections at http://localhost:42071 HTTP  8/25/2026 2:51:03 PM ::1 GET /index.html
+ HTTP  8/25/2026 2:51:03 PM ::1 Returned 301 in 358 ms
+ HTTP  8/25/2026 2:51:04 PM ::1 GET /index
+ HTTP  8/25/2026 2:51:04 PM ::1 Returned 301 in 1 ms
+ HTTP  8/25/2026 2:51:04 PM ::1 GET /
+ HTTP  8/25/2026 2:51:04 PM ::1 Returned 200 in 14 ms
+ HTTP  8/25/2026 2:51:04 PM ::1 GET /css/style.css
+ HTTP  8/25/2026 2:51:04 PM ::1 Returned 200 in 3 ms
+ HTTP  8/25/2026 2:51:04 PM ::1 GET /js/app.js
+ HTTP  8/25/2026 2:51:04 PM ::1 Returned 200 in 3 ms
+ HTTP  8/25/2026 2:51:09 PM ::1 GET /admin.html
+ HTTP  8/25/2026 2:51:09 PM ::1 Returned 301 in 1 ms
+ HTTP  8/25/2026 2:51:09 PM ::1 GET /admin
+ HTTP  8/25/2026 2:51:09 PM ::1 Returned 200 in 3 ms
+ HTTP  8/25/2026 2:51:09 PM ::1 GET /css/style.css
+ HTTP  8/25/2026 2:51:09 PM ::1 GET /js/app.js
+ HTTP  8/25/2026 2:51:09 PM ::1 Returned 304 in 2 ms
+ HTTP  8/25/2026 2:51:09 PM ::1 Returned 304 in 1 ms

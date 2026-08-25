@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - SL-Learn</title>
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>SL-Learn</h2>
+            </div>
+            <nav class="nav-menu">
+                <ul>
+                    <!-- Navigation links with data-target attributes for JS toggling -->
+                    <li><a href="#" class="active nav-link" data-target="schedule"><i class="fas fa-calendar-alt"></i> Live Classes</a></li>
+                    <li><a href="#" class="nav-link" data-target="recordings"><i class="fas fa-video"></i> Recordings</a></li>
+                    <li><a href="#" class="nav-link" data-target="materials"><i class="fas fa-book"></i> Materials (Tutes)</a></li>
+                </ul>
+            </nav>
+            <!-- Link to Admin Panel for demo purposes -->
+            <div class="admin-link">
+                <a href="admin.html"><i class="fas fa-user-shield"></i> Admin Panel</a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <h1>Student Dashboard</h1>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=Student+One&background=0056b3&color=fff" alt="User Avatar" class="avatar">
+                    <span class="user-name">Welcome, Student!</span>
+                </div>
+            </header>
+
+            <!-- Content Sections (Managed by JS) -->
+
+            <!-- 1. Live Class Schedule Section -->
+            <section id="schedule" class="content-section active">
+                <div class="section-header">
+                    <h2>Upcoming Live Classes</h2>
+                    <p>View your scheduled and recurring classes.</p>
+                </div>
+                <div class="schedule-list">
+                    <!-- Class Item -->
+                    <div class="schedule-item">
+                        <div class="time-block">
+                            <span class="date">Oct 15</span>
+                            <span class="time">15:00 PM</span>
+                        </div>
+                        <div class="class-info">
+                            <h3>A/L Physics - Mechanics Revision</h3>
+                            <p class="instructor"><i class="fas fa-chalkboard-teacher"></i> Dr. Silva</p>
+                            <span class="badge recurring">Every Tuesday</span>
+                        </div>
+                        <div class="action">
+                            <button class="btn btn-primary">Join Class</button>
+                        </div>
+                    </div>
+                    <!-- Class Item -->
+                    <div class="schedule-item">
+                        <div class="time-block">
+                            <span class="date">Oct 16</span>
+                            <span class="time">17:30 PM</span>
+                        </div>
+                        <div class="class-info">
+                            <h3>A/L Chemistry - Organic Intro</h3>
+                            <p class="instructor"><i class="fas fa-chalkboard-teacher"></i> Prof. Perera</p>
+                            <span class="badge recurring">Every Wednesday</span>
+                        </div>
+                        <div class="action">
+                            <button class="btn btn-primary">Join Class</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Class Recordings Section -->
+            <section id="recordings" class="content-section">
+                <div class="section-header">
+                    <h2>Class Recordings</h2>
+                    <p>Watch past sessions. Upgrade for premium content.</p>
+                </div>
+                <div class="grid-container">
+                    <!-- Free Recording -->
+                    <div class="card video-card">
+                        <div class="thumbnail">
+                            <i class="fas fa-play-circle play-icon"></i>
+                            <span class="tag free">Free</span>
+                        </div>
+                        <div class="card-content">
+                            <h3>Physics: Intro to Vectors</h3>
+                            <p class="meta">Recorded: Oct 10, 2023</p>
+                        </div>
+                    </div>
+                    <!-- Paid Recording (Locked) -->
+                    <div class="card video-card locked">
+                        <div class="thumbnail">
+                            <div class="overlay"></div>
+                            <i class="fas fa-lock lock-icon"></i>
+                            <span class="tag paid">Paid</span>
+                        </div>
+                        <div class="card-content">
+                            <h3>Physics: Advanced Kinematics</h3>
+                            <p class="meta">Recorded: Oct 12, 2023</p>
+                            <button class="btn btn-outline unlock-btn">Unlock Now</button>
+                        </div>
+                    </div>
+                    <!-- Paid Recording (Locked) -->
+                    <div class="card video-card locked">
+                        <div class="thumbnail">
+                            <div class="overlay"></div>
+                            <i class="fas fa-lock lock-icon"></i>
+                            <span class="tag paid">Paid</span>
+                        </div>
+                        <div class="card-content">
+                            <h3>Chemistry: Mole Concept</h3>
+                            <p class="meta">Recorded: Oct 13, 2023</p>
+                            <button class="btn btn-outline unlock-btn">Unlock Now</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Learning Materials Section -->
+            <section id="materials" class="content-section">
+                <div class="section-header">
+                    <h2>Learning Materials (Tutes)</h2>
+                    <p>Download class notes and past papers.</p>
+                </div>
+                <div class="list-container">
+                    <!-- Free Material -->
+                    <div class="material-item">
+                        <div class="material-icon free">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="material-info">
+                            <h3>Mechanics Tute 1 - Basics</h3>
+                            <p class="meta">PDF Document &bull; 2.4 MB</p>
+                        </div>
+                        <div class="material-action">
+                            <span class="tag free">Free</span>
+                            <button class="btn btn-secondary"><i class="fas fa-download"></i> Download</button>
+                        </div>
+                    </div>
+                    <!-- Paid Material -->
+                    <div class="material-item locked-item">
+                        <div class="material-icon paid">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="material-info">
+                            <h3>Mechanics Tute 2 - Past Papers</h3>
+                            <p class="meta">PDF Document &bull; 5.1 MB</p>
+                        </div>
+                        <div class="material-action">
+                            <span class="tag paid"><i class="fas fa-lock"></i> Paid</span>
+                            <button class="btn btn-outline disabled" disabled>Purchase to Access</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Link to external JS file -->
+    <script src="js/app.js"></script>
+</body>
+</html>
