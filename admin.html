@@ -21,6 +21,8 @@
                     <li><a href="#" class="active nav-link" data-target="manage-schedule"><i class="fas fa-calendar-plus"></i> Manage Schedule</a></li>
                     <li><a href="#" class="nav-link" data-target="upload-recording"><i class="fas fa-upload"></i> Upload Recording</a></li>
                     <li><a href="#" class="nav-link" data-target="upload-material"><i class="fas fa-file-upload"></i> Upload Material</a></li>
+                    <li><a href="#" class="nav-link" data-target="bank-details"><i class="fas fa-university"></i> Bank Details</a></li>
+                    <li><a href="#" class="nav-link" data-target="purchase-requests"><i class="fas fa-file-invoice-dollar"></i> Purchase Requests</a></li>
                 </ul>
             </nav>
             <!-- Link back to Student View for demo purposes -->
@@ -101,15 +103,21 @@
                             <label class="access-label">Access Level</label>
                             <div class="toggle-container">
                                 <label class="radio-option">
-                                    <input type="radio" name="video_access" value="free" checked>
+                                    <input type="radio" name="video_access" value="free" class="access-radio" checked>
                                     <span class="custom-radio"></span> Free Access
                                 </label>
                                 <label class="radio-option">
-                                    <input type="radio" name="video_access" value="paid">
+                                    <input type="radio" name="video_access" value="paid" class="access-radio">
                                     <span class="custom-radio"></span> Paid (Premium)
                                 </label>
                             </div>
                             <small class="help-text">Paid recordings will display a lock icon on the student dashboard.</small>
+
+                            <!-- Price Input (Hidden by default) -->
+                            <div class="price-input-container" style="display: none; margin-top: 15px;">
+                                <label for="video-price">Price (LKR)</label>
+                                <input type="number" id="video-price" placeholder="e.g., 1000" min="0" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
+                            </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Video</button>
@@ -142,18 +150,100 @@
                             <label class="access-label">Access Level</label>
                             <div class="toggle-container">
                                 <label class="radio-option">
-                                    <input type="radio" name="doc_access" value="free" checked>
+                                    <input type="radio" name="doc_access" value="free" class="access-radio" checked>
                                     <span class="custom-radio"></span> Free Access
                                 </label>
                                 <label class="radio-option">
-                                    <input type="radio" name="doc_access" value="paid">
+                                    <input type="radio" name="doc_access" value="paid" class="access-radio">
                                     <span class="custom-radio"></span> Paid (Premium)
                                 </label>
+                            </div>
+
+                            <!-- Price Input (Hidden by default) -->
+                            <div class="price-input-container" style="display: none; margin-top: 15px;">
+                                <label for="doc-price">Price (LKR)</label>
+                                <input type="number" id="doc-price" placeholder="e.g., 500" min="0" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 4px; font-family: inherit;">
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> Upload Material</button>
                     </form>
+                </div>
+            </section>
+
+            <!-- 4. Bank Details Setup -->
+            <section id="bank-details" class="content-section">
+                <div class="section-header">
+                    <h2>Bank Details Setup</h2>
+                    <p>Set up the bank account information displayed to students during checkout.</p>
+                </div>
+                <div class="form-card">
+                    <form action="#" onsubmit="event.preventDefault(); alert('Bank Details Updated!');">
+                        <div class="form-group">
+                            <label for="bank-name">Bank Name</label>
+                            <input type="text" id="bank-name" placeholder="e.g., Commercial Bank" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="branch-name">Branch Name</label>
+                            <input type="text" id="branch-name" placeholder="e.g., Colombo Main" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-name">Account Name</label>
+                            <input type="text" id="account-name" placeholder="e.g., J.D. Silva" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="account-number">Account Number</label>
+                            <input type="text" id="account-number" placeholder="e.g., 1234567890" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Bank Details</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 5. Purchase Requests -->
+            <section id="purchase-requests" class="content-section">
+                <div class="section-header">
+                    <h2>Purchase Requests</h2>
+                    <p>Review and approve student payment receipts.</p>
+                </div>
+                <div class="list-container">
+                    <!-- Request Item -->
+                    <div class="material-item">
+                        <div class="material-icon">
+                            <i class="fas fa-file-invoice-dollar" style="color: #0056b3;"></i>
+                        </div>
+                        <div class="material-info">
+                            <h3>Student: Kamal Perera</h3>
+                            <p class="meta">Item: Chemistry: Mole Concept (Recording) &bull; Amount: <strong>LKR 1000</strong></p>
+                            <a href="#" class="view-receipt-link" style="display: inline-block; margin-top: 5px; color: #0056b3; text-decoration: none;"><i class="fas fa-image"></i> View Uploaded Receipt</a>
+                        </div>
+                        <div class="material-action request-actions">
+                            <span class="badge" style="background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 4px; display: block; margin-bottom: 10px; text-align: center;">Pending</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="btn btn-primary" style="background: #28a745; padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Access Granted')"><i class="fas fa-check"></i> Accept</button>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Request Rejected')"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request Item -->
+                    <div class="material-item">
+                        <div class="material-icon">
+                            <i class="fas fa-file-invoice-dollar" style="color: #0056b3;"></i>
+                        </div>
+                        <div class="material-info">
+                            <h3>Student: Nimal Fernando</h3>
+                            <p class="meta">Item: Mechanics Tute 2 (Material) &bull; Amount: <strong>LKR 500</strong></p>
+                            <a href="#" class="view-receipt-link" style="display: inline-block; margin-top: 5px; color: #0056b3; text-decoration: none;"><i class="fas fa-file-pdf"></i> View Uploaded Receipt</a>
+                        </div>
+                        <div class="material-action request-actions">
+                            <span class="badge" style="background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 4px; display: block; margin-bottom: 10px; text-align: center;">Pending</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button class="btn btn-primary" style="background: #28a745; padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Access Granted')"><i class="fas fa-check"></i> Accept</button>
+                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Request Rejected')"><i class="fas fa-times"></i> Reject</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 

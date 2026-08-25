@@ -444,6 +444,122 @@ body {
 }
 
 /* =========================================
+   Cart & Checkout Styles
+   ========================================= */
+.cart-badge {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-left: 5px;
+    vertical-align: top;
+}
+
+.cart-container {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    padding: 20px;
+    max-width: 800px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.item-details h4 {
+    margin-bottom: 5px;
+    color: var(--text-main);
+}
+.item-type {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.item-price {
+    font-weight: bold;
+    color: var(--primary-color);
+}
+.remove-btn {
+    background: none;
+    border: none;
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+.remove-btn:hover { color: #c0392b; }
+
+.cart-summary {
+    margin-top: 20px;
+    padding-top: 20px;
+}
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+.summary-row.total {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    border-top: 2px solid var(--border-color);
+    padding-top: 10px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1000px;
+}
+
+.bank-info-card {
+    background: #e3f2fd;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+    padding-bottom: 5px;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row .label { color: var(--text-muted); font-weight: 600; }
+.info-row .value { font-weight: bold; }
+.info-row .value.highlight { font-size: 1.2rem; color: #d35400; }
+
+.amount-due {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #856404;
+}
+
+.price-tag {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 10px;
+}
+
+/* =========================================
    Admin Form Styles
    ========================================= */
 .form-card {
@@ -624,5 +740,8 @@ input:focus, select:focus {
     .form-row {
         flex-direction: column;
         gap: 0;
+    }
+    .checkout-layout {
+        grid-template-columns: 1fr;
     }
 }
