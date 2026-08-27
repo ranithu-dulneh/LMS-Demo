@@ -128,6 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressBar = document.getElementById('receipt-progress-bar');
             const progressText = document.getElementById('receipt-progress-text');
             const previewContainer = document.getElementById('receipt-preview');
+            const referenceNoInput = document.getElementById('reference-no');
+
+            const { data: { session } } = await supabase.auth.getSession();
 
             if (file) {
                 const originalText = submitBtn.innerHTML;
@@ -141,8 +144,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (progressBar) progressBar.style.width = `${percentage}%`;
                         if (progressText) progressText.textContent = `${percentage}%`;
                     });
-                    alert(`Receipt Uploaded Successfully!\n(Path: ${uploadedPath})\nWaiting for Admin approval.`);
-                    receiptForm.reset();
+
+                    // Save to database
+                    const { error: dbError } = await supabase.from('Stu_Reciepts').insert([
+                        {
+                            file_path: uploadedPath,
+                            reference_no: referenceNoInput ? referenceNoInput.value : null,
+                            user_email: session ? session.user.email : 'anonymous'
+                        }
+                    ]);
+                    if (dbError) {
+                        console.error('Error saving receipt to database:', dbError);
+                        alert(`File uploaded to R2, but failed to save to database. Check console.`);
+                    } else {
+                        alert(`Receipt Uploaded Successfully!\n(Path: ${uploadedPath})\nWaiting for Admin approval.`);
+                        receiptForm.reset();
+                    }
+
                     if (previewContainer) {
                         previewContainer.innerHTML = '';
                         previewContainer.classList.add('hidden');
@@ -176,6 +194,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressText = document.getElementById('doc-progress-text');
             const previewContainer = document.getElementById('doc-preview');
 
+            const docTitleInput = document.getElementById('doc-title');
+            const accessRadios = document.getElementsByName('doc_access');
+            let accessLevel = 'free';
+            for (const radio of accessRadios) { if (radio.checked) accessLevel = radio.value; }
+            const docPriceInput = document.getElementById('doc-price');
+
             if (file) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
@@ -188,8 +212,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (progressBar) progressBar.style.width = `${percentage}%`;
                         if (progressText) progressText.textContent = `${percentage}%`;
                     });
-                    alert(`Material Uploaded Successfully!\n(Path: ${uploadedPath})`);
-                    materialForm.reset();
+
+                    // Save to database
+                    const { error: dbError } = await supabase.from('Tutes').insert([
+                        {
+                            title: docTitleInput ? docTitleInput.value : file.name,
+                            file_path: uploadedPath,
+                            access_level: accessLevel,
+                            price: accessLevel === 'paid' && docPriceInput ? parseFloat(docPriceInput.value) : 0
+                        }
+                    ]);
+                    if (dbError) {
+                        console.error('Error saving material to database:', dbError);
+                        alert(`File uploaded to R2, but failed to save to database. Check console.`);
+                    } else {
+                        alert(`Material Uploaded Successfully!\n(Path: ${uploadedPath})`);
+                        materialForm.reset();
+                    }
+
                     if (previewContainer) {
                         previewContainer.innerHTML = '';
                         previewContainer.classList.add('hidden');
@@ -228,6 +268,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const progressText = document.getElementById('video-progress-text');
             const previewContainer = document.getElementById('video-preview');
 
+            const videoTitleInput = document.getElementById('video-title');
+            const accessRadios = document.getElementsByName('video_access');
+            let accessLevel = 'free';
+            for (const radio of accessRadios) { if (radio.checked) accessLevel = radio.value; }
+            const videoPriceInput = document.getElementById('video-price');
+
             if (file) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
@@ -240,8 +286,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (progressBar) progressBar.style.width = `${percentage}%`;
                         if (progressText) progressText.textContent = `${percentage}%`;
                     });
-                    alert(`Recording Uploaded Successfully!\n(Path: ${uploadedPath})`);
-                    recordingForm.reset();
+
+                    // Save to database
+                    const { error: dbError } = await supabase.from('Recordings').insert([
+                        {
+                            title: videoTitleInput ? videoTitleInput.value : file.name,
+                            file_path: uploadedPath,
+                            access_level: accessLevel,
+                            price: accessLevel === 'paid' && videoPriceInput ? parseFloat(videoPriceInput.value) : 0
+                        }
+                    ]);
+                    if (dbError) {
+                        console.error('Error saving recording to database:', dbError);
+                        alert(`File uploaded to R2, but failed to save to database. Check console.`);
+                    } else {
+                        alert(`Recording Uploaded Successfully!\n(Path: ${uploadedPath})`);
+                        recordingForm.reset();
+                    }
+
                     if (previewContainer) {
                         previewContainer.innerHTML = '';
                         previewContainer.classList.add('hidden');
