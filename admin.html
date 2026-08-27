@@ -94,7 +94,7 @@
                     <p>Upload video files and set access permissions.</p>
                 </div>
                 <div class="form-card">
-                    <form action="#" onsubmit="event.preventDefault(); alert('Recording Uploaded!');">
+                    <form id="recording-upload-form">
                         <div class="form-group">
                             <label for="video-title">Video Title</label>
                             <input type="text" id="video-title" placeholder="Enter title" required>
@@ -141,7 +141,7 @@
                     <p>Distribute PDFs, notes, or past papers.</p>
                 </div>
                 <div class="form-card">
-                    <form action="#" onsubmit="event.preventDefault(); alert('Material Uploaded!');">
+                    <form id="material-upload-form">
                         <div class="form-group">
                             <label for="doc-title">Document Title</label>
                             <input type="text" id="doc-title" placeholder="e.g., Chemistry Past Paper 2022" required>
@@ -263,5 +263,7 @@
     <script src="js/app.js"></script>
     <!-- Supabase Auth Script -->
     <script type="module" src="auth.js"></script>
+    <!-- Cloudflare R2 Storage Script -->
+    <script type="module" src="storage.js"></script>
 </body>
 </html>
