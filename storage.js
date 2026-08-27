@@ -12,7 +12,10 @@ export async function uploadToR2(file, prefix = '') {
     try {
         // Request a presigned URL from the Edge Function
         const { data, error } = await supabase.functions.invoke('get-upload-url', {
-            body: { fileName: fileName }
+            body: {
+                fileName: fileName,
+                contentType: file.type
+            }
         });
 
         if (error) {
@@ -27,6 +30,9 @@ export async function uploadToR2(file, prefix = '') {
         // Upload directly to Cloudflare R2 using the presigned URL
         const uploadResponse = await fetch(data.signedUrl, {
             method: 'PUT',
+            headers: {
+                'Content-Type': file.type
+            },
             body: file
         });
 

@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { fileName } = await req.json();
+    const { fileName, contentType } = await req.json();
 
     if (!fileName) {
       return new Response(JSON.stringify({ error: "fileName is required" }), {
@@ -43,6 +43,7 @@ serve(async (req) => {
     const command = new PutObjectCommand({
       Bucket: "sl-learn-bucket",
       Key: fileName,
+      ContentType: contentType || "application/octet-stream",
     });
 
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
