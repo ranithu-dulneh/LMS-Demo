@@ -255,6 +255,12 @@
                                     <input type="file" id="receipt-file" accept="image/*,.pdf" capture="environment" required>
                                 </div>
 
+                                <div id="receipt-preview" class="file-preview hidden"></div>
+                                <div id="receipt-progress-container" class="progress-container hidden">
+                                    <div id="receipt-progress-bar" class="progress-bar"></div>
+                                    <span id="receipt-progress-text" class="progress-text">0%</span>
+                                </div>
+
                                 <div class="form-group">
                                     <label for="reference-no">Reference No. / Remarks (Optional)</label>
                                     <input type="text" id="reference-no" placeholder="e.g., Transfer ID">

@@ -847,3 +847,48 @@ input:focus, select:focus {
         grid-template-columns: 1fr;
     }
 }
+
+/* File Preview and Progress UI */
+.file-preview {
+    margin-top: 10px;
+    text-align: center;
+    border: 1px dashed var(--border-color);
+    padding: 10px;
+    border-radius: 8px;
+    background: #fdfdfd;
+}
+
+.file-preview.hidden {
+    display: none;
+}
+
+.progress-container {
+    margin-top: 15px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    position: relative;
+    height: 25px;
+    overflow: hidden;
+}
+
+.progress-container.hidden {
+    display: none;
+}
+
+.progress-bar {
+    background-color: var(--primary-color);
+    height: 100%;
+    width: 0%;
+    transition: width 0.2s ease-in-out;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}

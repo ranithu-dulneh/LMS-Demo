@@ -107,6 +107,12 @@
                             <input type="file" id="video-file" accept="video/mp4" required>
                         </div>
 
+                        <div id="video-preview" class="file-preview hidden"></div>
+                        <div id="video-progress-container" class="progress-container hidden">
+                            <div id="video-progress-bar" class="progress-bar"></div>
+                            <span id="video-progress-text" class="progress-text">0%</span>
+                        </div>
+
                         <!-- Important: Toggle for Free/Paid -->
                         <div class="form-group access-control">
                             <label class="access-label">Access Level</label>
@@ -152,6 +158,12 @@
                                 <i class="fas fa-file-pdf"></i> Select Document (PDF)
                             </label>
                             <input type="file" id="doc-file" accept=".pdf" required>
+                        </div>
+
+                        <div id="doc-preview" class="file-preview hidden"></div>
+                        <div id="doc-progress-container" class="progress-container hidden">
+                            <div id="doc-progress-bar" class="progress-bar"></div>
+                            <span id="doc-progress-text" class="progress-text">0%</span>
                         </div>
 
                         <!-- Important: Toggle for Free/Paid -->
