@@ -1,42 +1,7 @@
-import { S3Client, PutObjectCommand } from 'https://cdn.jsdelivr.net/npm/@aws-sdk/client-s3/+esm';
+import { supabase } from './auth.js';
 
 /**
- * ============================================================================
- * ⚠️ SECURITY WARNING ⚠️
- *
- * You should NEVER hardcode your Cloudflare R2 Secret Access Key in frontend
- * JavaScript. Anyone visiting your site can view the source code and steal
- * your key, giving them full control over your storage bucket.
- *
- * In a production environment, you should use a backend server (or Supabase
- * Edge Functions) to generate a "Presigned URL". Your frontend then uses
- * that temporary URL to upload the file securely.
- *
- * For this demo, we are setting up the structure. If the keys are left as
- * placeholders, the code will simulate a successful upload.
- * ============================================================================
- */
-
-const R2_ACCOUNT_ID = '9dd9f65f2b45d7d473f91154f22e0d8e';
-const R2_ENDPOINT = `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`;
-const BUCKET_NAME = 'sl-learn-bucket'; // Replace with your actual bucket name
-
-// Placeholder credentials - DO NOT replace these with real keys if pushing to a public repository
-const R2_ACCESS_KEY_ID = 'YOUR_R2_ACCESS_KEY';
-const R2_SECRET_ACCESS_KEY = 'YOUR_R2_SECRET_KEY';
-
-// Initialize S3 Client for Cloudflare R2
-const s3Client = new S3Client({
-    region: 'auto',
-    endpoint: R2_ENDPOINT,
-    credentials: {
-        accessKeyId: R2_ACCESS_KEY_ID,
-        secretAccessKey: R2_SECRET_ACCESS_KEY,
-    }
-});
-
-/**
- * Uploads a file to Cloudflare R2
+ * Uploads a file to Cloudflare R2 securely using a Presigned URL via Supabase Edge Functions.
  * @param {File} file - The file object from an input element
  * @param {string} prefix - Folder prefix (e.g., 'receipts/', 'materials/', 'recordings/')
  * @returns {Promise<string>} - The path/key of the uploaded file
@@ -44,25 +9,31 @@ const s3Client = new S3Client({
 export async function uploadToR2(file, prefix = '') {
     const fileName = `${prefix}${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
-    // Check if we are using placeholders
-    if (R2_ACCESS_KEY_ID === 'YOUR_R2_ACCESS_KEY' || R2_SECRET_ACCESS_KEY === 'YOUR_R2_SECRET_KEY') {
-        console.warn('Simulating upload because real R2 credentials are not provided. This is safe for frontend testing.');
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(`simulated/${fileName}`);
-            }, 1000); // Simulate network delay
-        });
-    }
-
     try {
-        const command = new PutObjectCommand({
-            Bucket: BUCKET_NAME,
-            Key: fileName,
-            Body: file,
-            ContentType: file.type,
+        // Request a presigned URL from the Edge Function
+        const { data, error } = await supabase.functions.invoke('get-upload-url', {
+            body: { fileName: fileName }
         });
 
-        await s3Client.send(command);
+        if (error) {
+            console.error('Error getting presigned URL:', error);
+            throw new Error(`Edge Function error: ${error.message}`);
+        }
+
+        if (!data || !data.signedUrl) {
+            throw new Error('No signedUrl returned from Edge Function');
+        }
+
+        // Upload directly to Cloudflare R2 using the presigned URL
+        const uploadResponse = await fetch(data.signedUrl, {
+            method: 'PUT',
+            body: file
+        });
+
+        if (!uploadResponse.ok) {
+            throw new Error(`Upload to R2 failed with status: ${uploadResponse.status}`);
+        }
+
         console.log('Successfully uploaded to R2:', fileName);
         return fileName;
     } catch (error) {
