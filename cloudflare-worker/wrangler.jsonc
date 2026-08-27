@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "lms-upload-worker",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-03-20",
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "R2_ENDPOINT": "https://9dd9f65f2b45d7d473f91154f22e0d8e.r2.cloudflarestorage.com",
+    "R2_BUCKET_NAME": "sl-learn-bucket"
+  }
+}

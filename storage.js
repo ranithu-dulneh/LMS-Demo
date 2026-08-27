@@ -1,7 +1,10 @@
 import { supabase } from './auth.js';
 
+// IMPORTANT: Replace this with your actual deployed Cloudflare Worker URL
+const WORKER_URL = "https://lms-upload-worker.<YOUR_SUBDOMAIN>.workers.dev";
+
 /**
- * Uploads a file to Cloudflare R2 securely using a Presigned URL via Supabase Edge Functions.
+ * Uploads a file to Cloudflare R2 securely using a Presigned URL via a Cloudflare Worker.
  * @param {File} file - The file object from an input element
  * @param {string} prefix - Folder prefix (e.g., 'receipts/', 'materials/', 'recordings/')
  * @param {function} onProgress - Optional callback function to track upload progress (percentage)
@@ -11,24 +14,31 @@ export async function uploadToR2(file, prefix = '', onProgress = null) {
     const fileName = `${prefix}${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
     try {
-        // Request a presigned URL from the Edge Function
-        const { data, error } = await supabase.functions.invoke('get-upload-url', {
-            body: {
+        // Request a presigned URL from the Cloudflare Worker
+        const response = await fetch(WORKER_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
                 fileName: fileName,
                 contentType: file.type
-            }
+            })
         });
 
-        if (error) {
-            console.error('Error getting presigned URL:', error);
-            throw new Error(`Edge Function error: ${error.message}`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Error getting presigned URL:', errorText);
+            throw new Error(`Worker error: ${response.status} ${errorText}`);
         }
+
+        const data = await response.json();
 
         if (!data || !data.signedUrl) {
-            throw new Error('No signedUrl returned from Edge Function');
+            throw new Error('No signedUrl returned from Worker');
         }
 
-        // Upload directly to Cloudflare R2 using the presigned URL using XMLHttpRequest for progress tracking
+        // Upload directly to Cloudflare R2 using the presigned URL via XMLHttpRequest for progress tracking
         await new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
 
