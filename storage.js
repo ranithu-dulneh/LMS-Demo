@@ -4,9 +4,10 @@ import { supabase } from './auth.js';
  * Uploads a file to Cloudflare R2 securely using a Presigned URL via Supabase Edge Functions.
  * @param {File} file - The file object from an input element
  * @param {string} prefix - Folder prefix (e.g., 'receipts/', 'materials/', 'recordings/')
+ * @param {function} onProgress - Optional callback function to track upload progress (percentage)
  * @returns {Promise<string>} - The path/key of the uploaded file
  */
-export async function uploadToR2(file, prefix = '') {
+export async function uploadToR2(file, prefix = '', onProgress = null) {
     const fileName = `${prefix}${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
     try {
@@ -27,18 +28,31 @@ export async function uploadToR2(file, prefix = '') {
             throw new Error('No signedUrl returned from Edge Function');
         }
 
-        // Upload directly to Cloudflare R2 using the presigned URL
-        const uploadResponse = await fetch(data.signedUrl, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': file.type
-            },
-            body: file
-        });
+        // Upload directly to Cloudflare R2 using the presigned URL using XMLHttpRequest for progress tracking
+        await new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
 
-        if (!uploadResponse.ok) {
-            throw new Error(`Upload to R2 failed with status: ${uploadResponse.status}`);
-        }
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable && onProgress) {
+                    const percentage = Math.round((event.loaded / event.total) * 100);
+                    onProgress(percentage);
+                }
+            };
+
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.response);
+                } else {
+                    reject(new Error(`Upload to R2 failed with status: ${xhr.status}`));
+                }
+            };
+
+            xhr.onerror = () => reject(new Error('Network error occurred during upload.'));
+
+            xhr.open('PUT', data.signedUrl);
+            xhr.setRequestHeader('Content-Type', file.type);
+            xhr.send(file);
+        });
 
         console.log('Successfully uploaded to R2:', fileName);
         return fileName;
@@ -54,6 +68,53 @@ export async function uploadToR2(file, prefix = '') {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    // Helper function for file previews
+    function handleFilePreview(inputId, previewId) {
+        const fileInput = document.getElementById(inputId);
+        const previewContainer = document.getElementById(previewId);
+
+        if (fileInput && previewContainer) {
+            fileInput.addEventListener('change', () => {
+                const file = fileInput.files[0];
+                previewContainer.innerHTML = ''; // Clear previous preview
+
+                if (file) {
+                    previewContainer.classList.remove('hidden');
+
+                    if (file.type.startsWith('image/')) {
+                        const img = document.createElement('img');
+                        img.src = URL.createObjectURL(file);
+                        img.style.maxWidth = '100%';
+                        img.style.maxHeight = '200px';
+                        img.style.borderRadius = '8px';
+                        previewContainer.appendChild(img);
+                    } else if (file.type.startsWith('video/')) {
+                        const video = document.createElement('video');
+                        video.src = URL.createObjectURL(file);
+                        video.controls = true;
+                        video.style.maxWidth = '100%';
+                        video.style.maxHeight = '200px';
+                        video.style.borderRadius = '8px';
+                        previewContainer.appendChild(video);
+                    } else {
+                        // For PDFs or other files
+                        const p = document.createElement('p');
+                        p.textContent = `📄 Selected File: ${file.name}`;
+                        p.style.fontWeight = 'bold';
+                        previewContainer.appendChild(p);
+                    }
+                } else {
+                    previewContainer.classList.add('hidden');
+                }
+            });
+        }
+    }
+
+    // Setup previews
+    handleFilePreview('receipt-file', 'receipt-preview');
+    handleFilePreview('doc-file', 'doc-preview');
+    handleFilePreview('video-file', 'video-preview');
+
     // 1. Student Receipt Upload Form (index.html)
     const receiptForm = document.getElementById('receipt-upload-form');
     if (receiptForm) {
@@ -63,20 +124,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = fileInput.files[0];
             const submitBtn = receiptForm.querySelector('button[type="submit"]');
 
+            const progressContainer = document.getElementById('receipt-progress-container');
+            const progressBar = document.getElementById('receipt-progress-bar');
+            const progressText = document.getElementById('receipt-progress-text');
+            const previewContainer = document.getElementById('receipt-preview');
+
             if (file) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
                 submitBtn.disabled = true;
 
+                if (progressContainer) progressContainer.classList.remove('hidden');
+
                 try {
-                    const uploadedPath = await uploadToR2(file, 'receipts/');
+                    const uploadedPath = await uploadToR2(file, 'receipts/', (percentage) => {
+                        if (progressBar) progressBar.style.width = `${percentage}%`;
+                        if (progressText) progressText.textContent = `${percentage}%`;
+                    });
                     alert(`Receipt Uploaded Successfully!\n(Path: ${uploadedPath})\nWaiting for Admin approval.`);
                     receiptForm.reset();
+                    if (previewContainer) {
+                        previewContainer.innerHTML = '';
+                        previewContainer.classList.add('hidden');
+                    }
                 } catch (error) {
                     alert('Failed to upload receipt. Check console for details.');
                 } finally {
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
+                    if (progressContainer) {
+                        progressContainer.classList.add('hidden');
+                        if (progressBar) progressBar.style.width = '0%';
+                        if (progressText) progressText.textContent = '0%';
+                    }
                 }
             }
         });
@@ -91,15 +171,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = fileInput.files[0];
             const submitBtn = materialForm.querySelector('button[type="submit"]');
 
+            const progressContainer = document.getElementById('doc-progress-container');
+            const progressBar = document.getElementById('doc-progress-bar');
+            const progressText = document.getElementById('doc-progress-text');
+            const previewContainer = document.getElementById('doc-preview');
+
             if (file) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
                 submitBtn.disabled = true;
 
+                if (progressContainer) progressContainer.classList.remove('hidden');
+
                 try {
-                    const uploadedPath = await uploadToR2(file, 'materials/');
+                    const uploadedPath = await uploadToR2(file, 'materials/', (percentage) => {
+                        if (progressBar) progressBar.style.width = `${percentage}%`;
+                        if (progressText) progressText.textContent = `${percentage}%`;
+                    });
                     alert(`Material Uploaded Successfully!\n(Path: ${uploadedPath})`);
                     materialForm.reset();
+                    if (previewContainer) {
+                        previewContainer.innerHTML = '';
+                        previewContainer.classList.add('hidden');
+                    }
                     // Optional: Reset dynamic price input if it was shown
                     const priceInput = document.getElementById('material-price-input');
                     if (priceInput) priceInput.classList.add('hidden');
@@ -108,6 +202,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } finally {
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
+                    if (progressContainer) {
+                        progressContainer.classList.add('hidden');
+                        if (progressBar) progressBar.style.width = '0%';
+                        if (progressText) progressText.textContent = '0%';
+                    }
                 }
             } else {
                 alert('Please select a file to upload.');
@@ -124,15 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
             const file = fileInput.files[0];
             const submitBtn = recordingForm.querySelector('button[type="submit"]');
 
+            const progressContainer = document.getElementById('video-progress-container');
+            const progressBar = document.getElementById('video-progress-bar');
+            const progressText = document.getElementById('video-progress-text');
+            const previewContainer = document.getElementById('video-preview');
+
             if (file) {
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
                 submitBtn.disabled = true;
 
+                if (progressContainer) progressContainer.classList.remove('hidden');
+
                 try {
-                    const uploadedPath = await uploadToR2(file, 'recordings/');
+                    const uploadedPath = await uploadToR2(file, 'recordings/', (percentage) => {
+                        if (progressBar) progressBar.style.width = `${percentage}%`;
+                        if (progressText) progressText.textContent = `${percentage}%`;
+                    });
                     alert(`Recording Uploaded Successfully!\n(Path: ${uploadedPath})`);
                     recordingForm.reset();
+                    if (previewContainer) {
+                        previewContainer.innerHTML = '';
+                        previewContainer.classList.add('hidden');
+                    }
                     const priceInput = document.getElementById('recording-price-input');
                     if (priceInput) priceInput.classList.add('hidden');
                 } catch (error) {
@@ -140,6 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } finally {
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
+                    if (progressContainer) {
+                        progressContainer.classList.add('hidden');
+                        if (progressBar) progressBar.style.width = '0%';
+                        if (progressText) progressText.textContent = '0%';
+                    }
                 }
             } else {
                 alert('Please select a video to upload.');
