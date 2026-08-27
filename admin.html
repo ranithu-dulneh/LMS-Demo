@@ -10,7 +10,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="admin-theme">
-    <div class="dashboard-container">
+    <!-- Auth UI Section (Admin only needs redirect or simple message, but we'll use a placeholder since checkUser redirects) -->
+    <div id="auth-section" class="auth-container hidden">
+        <div class="auth-card">
+            <h2>Checking Admin Access...</h2>
+            <div id="auth-messages"></div>
+            <p>Please wait or <a href="index.html">return to Home</a> to log in.</p>
+        </div>
+    </div>
+
+    <div class="dashboard-container hidden" id="protected-content">
         <!-- Admin Sidebar Navigation -->
         <aside class="sidebar admin-sidebar">
             <div class="logo">
@@ -252,5 +261,7 @@
 
     <!-- Link to external JS file -->
     <script src="js/app.js"></script>
+    <!-- Supabase Auth Script -->
+    <script type="module" src="auth.js"></script>
 </body>
 </html>

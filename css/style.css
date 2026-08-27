@@ -757,6 +757,34 @@ input:focus, select:focus {
     border: 1px solid #c3e6cb;
 }
 
+.auth-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: var(--text-muted);
+}
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+.auth-divider span {
+    padding: 0 10px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.google-btn {
+    border-color: #db4437;
+    color: #db4437;
+    margin-bottom: 10px;
+}
+.google-btn:hover {
+    background-color: #db4437;
+    color: white;
+}
+
 /* =========================================
    Responsive Design
    ========================================= */

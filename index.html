@@ -27,7 +27,7 @@
                 </ul>
             </nav>
             <!-- Link to Admin Panel for demo purposes -->
-            <div class="admin-link">
+            <div class="admin-link hidden" id="admin-panel-link">
                 <a href="admin.html"><i class="fas fa-user-shield"></i> Admin Panel</a>
             </div>
         </aside>
@@ -286,6 +286,12 @@
                     <input type="password" id="login-password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
+
+                <div class="auth-divider"><span>OR</span></div>
+                <button type="button" class="btn btn-outline w-100 google-btn" id="login-google-btn">
+                    <i class="fab fa-google"></i> Login with Google
+                </button>
+
                 <p class="auth-switch">Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
             </form>
 
@@ -299,6 +305,12 @@
                     <input type="password" id="signup-password" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+
+                <div class="auth-divider"><span>OR</span></div>
+                <button type="button" class="btn btn-outline w-100 google-btn" id="signup-google-btn">
+                    <i class="fab fa-google"></i> Sign Up with Google
+                </button>
+
                 <p class="auth-switch">Already have an account? <a href="#" id="show-login">Login</a></p>
             </form>
         </div>
