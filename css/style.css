@@ -41,6 +41,13 @@ body {
 }
 
 /* =========================================
+   Utility Classes
+   ========================================= */
+.hidden {
+    display: none !important;
+}
+
+/* =========================================
    Layout Structure (Grid/Flexbox)
    ========================================= */
 .dashboard-container {
@@ -681,6 +688,73 @@ input:focus, select:focus {
     display: block;
     margin-top: 10px;
     color: var(--text-muted);
+}
+
+/* =========================================
+   Authentication UI Styles
+   ========================================= */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--secondary-color);
+}
+
+.auth-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.auth-card h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.auth-card .form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.auth-switch {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.auth-switch a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.auth-message {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    display: none;
+}
+
+.auth-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.auth-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 /* =========================================
