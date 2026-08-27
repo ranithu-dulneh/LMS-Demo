@@ -2,7 +2,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 
 // Initialize Supabase Client
 const SUPABASE_URL = 'https://bgykguysnjxxfmbhtyal.supabase.co'
-const SUPABASE_ANON_KEY = 'sb_publishable__P3ZaUE-15hMbIVHJNTRxw_vtKy15eS'
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJneWtndXlzbmp4eGZtYmh0eWFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc4Mjc3OTAsImV4cCI6MjEwMzQwMzc5MH0.14_DAR3xIErHAk-QBaGzL4vFoG5_GH3IDFUVoJCMpCA'
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
 // DOM Elements
