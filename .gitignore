@@ -5,3 +5,4 @@ test.js
 server.log
 package.json
 package-lock.json
+cloudflare-worker/dist/
