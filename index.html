@@ -76,52 +76,9 @@
                     <h2>Class Recordings</h2>
                     <p>Watch past sessions. Upgrade for premium content.</p>
                 </div>
-                <div class="grid-container">
-                    <!-- Free Recording -->
-                    <div class="card video-card" onclick="window.openYouTubeVideo('dQw4w9WgXcQ', 'Physics: Intro to Vectors')">
-                        <div class="thumbnail">
-                            <i class="fas fa-play-circle play-icon"></i>
-                            <span class="tag free">Free</span>
-                        </div>
-                        <div class="card-content">
-                            <h3>Physics: Intro to Vectors</h3>
-                            <p class="meta">Recorded: Oct 10, 2023</p>
-                        </div>
-                    </div>
-                    <!-- Paid Recording (Locked) -->
-                    <div class="card video-card locked">
-                        <div class="thumbnail">
-                            <div class="overlay"></div>
-                            <i class="fas fa-lock lock-icon"></i>
-                            <span class="tag paid">Paid</span>
-                        </div>
-                        <div class="card-content">
-                            <h3>Physics: Advanced Kinematics</h3>
-                            <p class="meta">Recorded: Oct 12, 2023</p>
-                            <div class="price-tag">LKR 1000</div>
-                            <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button class="btn btn-primary" style="flex: 1; padding: 8px;" onclick="document.getElementById('checkout-nav-link').click();"><i class="fas fa-bolt"></i> Pay Now</button>
-                                <button class="btn btn-outline" style="flex: 1; padding: 8px;" onclick="alert('Added to Cart')"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Paid Recording (Locked) -->
-                    <div class="card video-card locked">
-                        <div class="thumbnail">
-                            <div class="overlay"></div>
-                            <i class="fas fa-lock lock-icon"></i>
-                            <span class="tag paid">Paid</span>
-                        </div>
-                        <div class="card-content">
-                            <h3>Chemistry: Mole Concept</h3>
-                            <p class="meta">Recorded: Oct 13, 2023</p>
-                            <div class="price-tag">LKR 1000</div>
-                            <div class="action-buttons" style="display: flex; gap: 10px; margin-top: 10px;">
-                                <button class="btn btn-primary" style="flex: 1; padding: 8px;" onclick="document.getElementById('checkout-nav-link').click();"><i class="fas fa-bolt"></i> Pay Now</button>
-                                <button class="btn btn-outline" style="flex: 1; padding: 8px;" onclick="alert('Added to Cart')"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="grid-container" id="recordings-list">
+                    <!-- Recordings will be dynamically loaded here by data.js -->
+                    <p style="color: var(--text-muted);">Loading recordings...</p>
                 </div>
             </section>
 
@@ -131,39 +88,9 @@
                     <h2>Learning Materials (Tutes)</h2>
                     <p>Download class notes and past papers.</p>
                 </div>
-                <div class="list-container">
-                    <!-- Free Material -->
-                    <div class="material-item">
-                        <div class="material-icon free">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="material-info">
-                            <h3>Mechanics Tute 1 - Basics</h3>
-                            <p class="meta">PDF Document &bull; 2.4 MB</p>
-                        </div>
-                        <div class="material-action">
-                            <span class="tag free">Free</span>
-                            <button class="btn btn-secondary"><i class="fas fa-download"></i> Download</button>
-                        </div>
-                    </div>
-                    <!-- Paid Material -->
-                    <div class="material-item locked-item">
-                        <div class="material-icon paid">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div class="material-info">
-                            <h3>Mechanics Tute 2 - Past Papers</h3>
-                            <p class="meta">PDF Document &bull; 5.1 MB</p>
-                            <div class="price-tag" style="margin-top: 5px; color: var(--text-main); font-weight: bold;">LKR 500</div>
-                        </div>
-                        <div class="material-action" style="flex-direction: column; align-items: flex-end; gap: 10px;">
-                            <span class="tag paid"><i class="fas fa-lock"></i> Paid</span>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn btn-primary" style="padding: 8px 15px;" onclick="document.getElementById('checkout-nav-link').click();"><i class="fas fa-bolt"></i> Pay Now</button>
-                                <button class="btn btn-outline" style="padding: 8px 15px;" onclick="alert('Added to Cart')"><i class="fas fa-cart-plus"></i> Add</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="list-container" id="materials-list">
+                    <!-- Materials will be dynamically loaded here by data.js -->
+                    <p style="color: var(--text-muted);">Loading materials...</p>
                 </div>
             </section>
 
@@ -377,5 +304,7 @@
     <script type="module" src="auth.js"></script>
     <!-- Cloudflare R2 Storage Script -->
     <script type="module" src="storage.js"></script>
+    <!-- Dynamic Data Fetching Script -->
+    <script type="module" src="js/data.js"></script>
 </body>
 </html>
