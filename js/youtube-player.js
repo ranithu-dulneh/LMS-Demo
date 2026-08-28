@@ -11,14 +11,20 @@ const modalTitle = document.getElementById('video-modal-title');
 const closeBtn = document.getElementById('close-video-modal');
 
 // Controls
+const videoWrapper = document.getElementById('custom-video-wrapper');
+const interactionOverlay = document.getElementById('video-interaction-overlay');
 const playPauseBtn = document.getElementById('btn-play-pause');
-const skipBackwardBtn = document.getElementById('btn-skip-backward');
-const skipForwardBtn = document.getElementById('btn-skip-forward');
+const muteBtn = document.getElementById('btn-mute');
+const volumeSlider = document.getElementById('volume-slider');
+const fullscreenBtn = document.getElementById('btn-fullscreen');
 const speedSelect = document.getElementById('playback-speed');
 const progressBarContainer = document.getElementById('video-progress-container');
 const progressBarFill = document.getElementById('video-progress-fill');
 const timeCurrent = document.getElementById('time-current');
 const timeTotal = document.getElementById('time-total');
+
+let clickTimer = null;
+let previousVolume = 100;
 
 // Load YouTube IFrame API asynchronously
 function loadYouTubeAPI() {
@@ -37,10 +43,11 @@ window.onYouTubeIframeAPIReady = function() {
         playerVars: {
             'playsinline': 1,
             'controls': 0,      // Hide native controls
-            'disablekb': 1,     // Disable keyboard controls (we handle custom ones if needed)
+            'disablekb': 1,     // Disable keyboard controls
             'fs': 0,            // Hide fullscreen button
             'rel': 0,           // Don't show related videos from other channels at the end
-            'modestbranding': 1 // Minimal YouTube branding
+            'modestbranding': 1,// Minimal YouTube branding
+            'iv_load_policy': 3 // Hide annotations and cards
         },
         events: {
             'onReady': onPlayerReady,
@@ -111,6 +118,44 @@ function stopProgressInterval() {
 
 // Setup Event Listeners for Custom Controls
 function setupCustomControls() {
+    // Single & Double Click Logic on Overlay
+    interactionOverlay.addEventListener('click', (e) => {
+        if (!isPlayerReady) return;
+
+        if (clickTimer === null) {
+            // First click
+            clickTimer = setTimeout(() => {
+                // Single click action: Toggle Play/Pause
+                const state = ytPlayer.getPlayerState();
+                if (state == YT.PlayerState.PLAYING) {
+                    ytPlayer.pauseVideo();
+                } else {
+                    ytPlayer.playVideo();
+                }
+                clickTimer = null;
+            }, 250); // Wait 250ms to see if a second click happens
+        } else {
+            // Second click (Double click)
+            clearTimeout(clickTimer);
+            clickTimer = null;
+
+            // Determine left or right side click
+            const rect = interactionOverlay.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const current = ytPlayer.getCurrentTime();
+            const duration = ytPlayer.getDuration();
+
+            if (clickX < rect.width / 2) {
+                // Left side: Skip backward 10s
+                ytPlayer.seekTo(Math.max(0, current - 10), true);
+            } else {
+                // Right side: Skip forward 10s
+                ytPlayer.seekTo(Math.min(duration, current + 10), true);
+            }
+        }
+    });
+
+    // Play/Pause Button
     playPauseBtn.addEventListener('click', () => {
         if (!isPlayerReady) return;
         const state = ytPlayer.getPlayerState();
@@ -121,25 +166,82 @@ function setupCustomControls() {
         }
     });
 
-    skipBackwardBtn.addEventListener('click', () => {
+    // Volume & Mute
+    muteBtn.addEventListener('click', () => {
         if (!isPlayerReady) return;
-        const current = ytPlayer.getCurrentTime();
-        ytPlayer.seekTo(Math.max(0, current - 10), true);
+        if (ytPlayer.isMuted() || ytPlayer.getVolume() === 0) {
+            ytPlayer.unMute();
+            ytPlayer.setVolume(previousVolume || 100);
+            volumeSlider.value = previousVolume || 100;
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        } else {
+            previousVolume = ytPlayer.getVolume();
+            ytPlayer.mute();
+            volumeSlider.value = 0;
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        }
     });
 
-    skipForwardBtn.addEventListener('click', () => {
+    volumeSlider.addEventListener('input', (e) => {
         if (!isPlayerReady) return;
-        const current = ytPlayer.getCurrentTime();
-        const duration = ytPlayer.getDuration();
-        ytPlayer.seekTo(Math.min(duration, current + 10), true);
+        const vol = parseInt(e.target.value);
+        ytPlayer.setVolume(vol);
+        if (vol === 0) {
+            ytPlayer.mute();
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        } else {
+            ytPlayer.unMute();
+            if (vol < 50) {
+                muteBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+            } else {
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        }
     });
 
+    // Speed Control
     speedSelect.addEventListener('change', (e) => {
         if (!isPlayerReady) return;
         const speed = parseFloat(e.target.value);
         ytPlayer.setPlaybackRate(speed);
     });
 
+    // Fullscreen Toggle
+    fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            if (videoWrapper.requestFullscreen) {
+                videoWrapper.requestFullscreen();
+            } else if (videoWrapper.webkitRequestFullscreen) {
+                videoWrapper.webkitRequestFullscreen();
+            } else if (videoWrapper.msRequestFullscreen) {
+                videoWrapper.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+    });
+
+    // Fullscreen Event Listener to update icon
+    document.addEventListener('fullscreenchange', updateFullscreenIcon);
+    document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+    document.addEventListener('mozfullscreenchange', updateFullscreenIcon);
+    document.addEventListener('MSFullscreenChange', updateFullscreenIcon);
+
+    function updateFullscreenIcon() {
+        if (document.fullscreenElement) {
+            fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i>';
+        } else {
+            fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+        }
+    }
+
+    // Scrubber
     progressBarContainer.addEventListener('click', (e) => {
         if (!isPlayerReady) return;
 
