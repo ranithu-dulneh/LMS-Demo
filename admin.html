@@ -107,6 +107,18 @@
                             <input type="url" id="youtube-url" placeholder="e.g., https://youtu.be/..." required>
                         </div>
 
+                        <div class="form-group file-upload-group">
+                            <label for="video-thumb" class="file-label">
+                                <i class="fas fa-image"></i> Select Thumbnail / Cover Image (Optional)
+                            </label>
+                            <input type="file" id="video-thumb" accept="image/*">
+                        </div>
+                        <div id="video-thumb-preview" class="file-preview hidden"></div>
+                        <div id="video-thumb-progress-container" class="progress-container hidden">
+                            <div id="video-thumb-progress-bar" class="progress-bar"></div>
+                            <span id="video-thumb-progress-text" class="progress-text">0%</span>
+                        </div>
+
                         <!-- Important: Toggle for Free/Paid -->
                         <div class="form-group access-control">
                             <label class="access-label">Access Level</label>
@@ -158,6 +170,18 @@
                         <div id="doc-progress-container" class="progress-container hidden">
                             <div id="doc-progress-bar" class="progress-bar"></div>
                             <span id="doc-progress-text" class="progress-text">0%</span>
+                        </div>
+
+                        <div class="form-group file-upload-group" style="margin-top: 15px;">
+                            <label for="doc-thumb" class="file-label">
+                                <i class="fas fa-image"></i> Select Cover Image (Optional)
+                            </label>
+                            <input type="file" id="doc-thumb" accept="image/*">
+                        </div>
+                        <div id="doc-thumb-preview" class="file-preview hidden"></div>
+                        <div id="doc-thumb-progress-container" class="progress-container hidden">
+                            <div id="doc-thumb-progress-bar" class="progress-bar"></div>
+                            <span id="doc-thumb-progress-text" class="progress-text">0%</span>
                         </div>
 
                         <!-- Important: Toggle for Free/Paid -->

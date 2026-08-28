@@ -1,7 +1,10 @@
 import { supabase } from '../auth.js';
 
-// IMPORTANT: Replace this with your actual Cloudflare R2 Public Bucket URL or custom domain
-const R2_PUBLIC_URL = "https://pub-<YOUR_R2_DEV_ID>.r2.dev";
+// Helper to generate a direct download/view link for Google Drive files
+function getDriveUrl(fileId) {
+    if (!fileId) return '';
+    return `https://drive.google.com/uc?export=view&id=${fileId}`;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Determine which page we are on
@@ -50,10 +53,12 @@ async function fetchRecordings() {
 
             let cardHTML = '';
 
+            const thumbBg = rec.thumbnail_path ? `background-image: url('${getDriveUrl(rec.thumbnail_path)}'); background-size: cover; background-position: center;` : '';
+
             if (rec.access_level === 'free') {
                 cardHTML = `
                     <div class="card video-card" onclick="window.openYouTubeVideo('${videoId}', '${rec.title.replace(/'/g, "\\'")}')">
-                        <div class="thumbnail">
+                        <div class="thumbnail" style="${thumbBg}">
                             <i class="fas fa-play-circle play-icon"></i>
                             <span class="tag free">Free</span>
                         </div>
@@ -66,7 +71,7 @@ async function fetchRecordings() {
             } else {
                 cardHTML = `
                     <div class="card video-card locked">
-                        <div class="thumbnail">
+                        <div class="thumbnail" style="${thumbBg}">
                             <div class="overlay"></div>
                             <i class="fas fa-lock lock-icon"></i>
                             <span class="tag paid">Paid</span>
@@ -112,14 +117,19 @@ async function fetchMaterials() {
         }
 
         materials.forEach(mat => {
-            const fileUrl = `${R2_PUBLIC_URL}/${mat.file_path}`;
+            const fileUrl = getDriveUrl(mat.file_path);
             let itemHTML = '';
+
+            let iconOrThumb = '<i class="fas fa-file-pdf"></i>';
+            if (mat.thumbnail_path) {
+                iconOrThumb = `<img src="${getDriveUrl(mat.thumbnail_path)}" alt="Thumbnail" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+            }
 
             if (mat.access_level === 'free') {
                 itemHTML = `
                     <div class="material-item">
-                        <div class="material-icon free">
-                            <i class="fas fa-file-pdf"></i>
+                        <div class="material-icon free" style="overflow: hidden; padding: ${mat.thumbnail_path ? '0' : '15px'};">
+                            ${iconOrThumb}
                         </div>
                         <div class="material-info">
                             <h3>${mat.title}</h3>
@@ -134,8 +144,8 @@ async function fetchMaterials() {
             } else {
                 itemHTML = `
                     <div class="material-item locked-item">
-                        <div class="material-icon paid">
-                            <i class="fas fa-file-pdf"></i>
+                        <div class="material-icon paid" style="overflow: hidden; padding: ${mat.thumbnail_path ? '0' : '15px'};">
+                            ${iconOrThumb}
                         </div>
                         <div class="material-info">
                             <h3>${mat.title}</h3>
@@ -186,7 +196,7 @@ async function fetchPurchaseRequests() {
         }
 
         requests.forEach(req => {
-            const receiptUrl = `${R2_PUBLIC_URL}/${req.file_path}`;
+            const receiptUrl = getDriveUrl(req.file_path);
             const dateStr = new Date(req.created_at).toLocaleDateString();
             const timeStr = new Date(req.created_at).toLocaleTimeString();
 
