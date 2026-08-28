@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public."Recordings" (
     created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     title text NOT NULL,
     file_path text NOT NULL,
+    thumbnail_path text,
     access_level text DEFAULT 'free'::text,
     price numeric DEFAULT 0
 );
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS public."Tutes" (
     created_at timestamp with time zone DEFAULT timezone('utc'::text, now()) NOT NULL,
     title text NOT NULL,
     file_path text NOT NULL,
+    thumbnail_path text,
     access_level text DEFAULT 'free'::text,
     price numeric DEFAULT 0
 );
