@@ -78,7 +78,7 @@
                 </div>
                 <div class="grid-container">
                     <!-- Free Recording -->
-                    <div class="card video-card">
+                    <div class="card video-card" onclick="window.openYouTubeVideo('dQw4w9WgXcQ', 'Physics: Intro to Vectors')">
                         <div class="thumbnail">
                             <i class="fas fa-play-circle play-icon"></i>
                             <span class="tag free">Free</span>
@@ -276,6 +276,53 @@
         </main>
     </div>
 
+    <!-- Custom Video Player Modal -->
+    <div id="video-modal" class="modal-overlay hidden">
+        <div class="video-modal-content">
+            <div class="video-modal-header">
+                <h3 id="video-modal-title">Recording Player</h3>
+                <button id="close-video-modal" class="close-btn"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="custom-video-wrapper">
+                <!-- The YouTube API will replace this div with the iframe -->
+                <div id="youtube-player-container"></div>
+
+                <!-- Custom Controls Overlay -->
+                <div class="custom-controls-overlay" id="custom-controls">
+                    <!-- Progress / Scrubber Bar -->
+                    <div class="progress-bar-container" id="video-progress-container">
+                        <div class="progress-bar-bg"></div>
+                        <div class="progress-bar-fill" id="video-progress-fill"></div>
+                    </div>
+
+                    <div class="controls-toolbar">
+                        <div class="controls-left">
+                            <button id="btn-play-pause" class="control-btn"><i class="fas fa-play"></i></button>
+                            <button id="btn-skip-backward" class="control-btn"><i class="fas fa-undo"></i> 10s</button>
+                            <button id="btn-skip-forward" class="control-btn">10s <i class="fas fa-redo"></i></button>
+                            <div class="time-display">
+                                <span id="time-current">0:00</span> / <span id="time-total">0:00</span>
+                            </div>
+                        </div>
+
+                        <div class="controls-right">
+                            <div class="speed-control-container">
+                                <i class="fas fa-tachometer-alt" style="color: white; margin-right: 5px;"></i>
+                                <select id="playback-speed" class="control-select">
+                                    <option value="0.5">0.5x</option>
+                                    <option value="1" selected>1x</option>
+                                    <option value="1.5">1.5x</option>
+                                    <option value="2">2x</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Auth UI Section -->
     <div id="auth-section" class="auth-container">
         <div class="auth-card">
@@ -324,6 +371,8 @@
 
     <!-- Link to external JS file -->
     <script src="js/app.js"></script>
+    <!-- YouTube Custom Player Logic -->
+    <script src="js/youtube-player.js"></script>
     <!-- Supabase Auth Script -->
     <script type="module" src="auth.js"></script>
     <!-- Cloudflare R2 Storage Script -->
