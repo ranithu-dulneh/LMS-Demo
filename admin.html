@@ -100,17 +100,11 @@
                             <input type="text" id="video-title" placeholder="Enter title" required>
                         </div>
 
-                        <div class="form-group file-upload-group">
-                            <label for="video-file" class="file-label">
-                                <i class="fas fa-cloud-upload-alt"></i> Choose Video File (MP4)
+                        <div class="form-group">
+                            <label for="youtube-url">
+                                <i class="fab fa-youtube"></i> Unlisted YouTube Video URL
                             </label>
-                            <input type="file" id="video-file" accept="video/mp4" required>
-                        </div>
-
-                        <div id="video-preview" class="file-preview hidden"></div>
-                        <div id="video-progress-container" class="progress-container hidden">
-                            <div id="video-progress-bar" class="progress-bar"></div>
-                            <span id="video-progress-text" class="progress-text">0%</span>
+                            <input type="url" id="youtube-url" placeholder="e.g., https://youtu.be/..." required>
                         </div>
 
                         <!-- Important: Toggle for Free/Paid -->

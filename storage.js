@@ -264,19 +264,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Helper to extract YouTube Video ID
+    function extractYouTubeID(url) {
+        const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
+        const match = url.match(regex);
+        return match ? match[1] : null;
+    }
+
     // 3. Admin Recording Upload Form (admin.html)
     const recordingForm = document.getElementById('recording-upload-form');
     if (recordingForm) {
         recordingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const fileInput = document.getElementById('video-file');
-            const file = fileInput.files[0];
+            const urlInput = document.getElementById('youtube-url');
             const submitBtn = recordingForm.querySelector('button[type="submit"]');
-
-            const progressContainer = document.getElementById('video-progress-container');
-            const progressBar = document.getElementById('video-progress-bar');
-            const progressText = document.getElementById('video-progress-text');
-            const previewContainer = document.getElementById('video-preview');
 
             const videoTitleInput = document.getElementById('video-title');
             const accessRadios = document.getElementsByName('video_access');
@@ -284,55 +285,47 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const radio of accessRadios) { if (radio.checked) accessLevel = radio.value; }
             const videoPriceInput = document.getElementById('video-price');
 
-            if (file) {
+            if (urlInput && urlInput.value) {
+                const videoId = extractYouTubeID(urlInput.value);
+
+                if (!videoId) {
+                    alert('Invalid YouTube URL. Please enter a valid URL (e.g., https://youtu.be/...)');
+                    return;
+                }
+
                 const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 submitBtn.disabled = true;
 
-                if (progressContainer) progressContainer.classList.remove('hidden');
-
                 try {
-                    const uploadedPath = await uploadToR2(file, 'recordings/', (percentage) => {
-                        if (progressBar) progressBar.style.width = `${percentage}%`;
-                        if (progressText) progressText.textContent = `${percentage}%`;
-                    });
-
-                    // Save to database
+                    // Save to database, storing the youtube video ID in the file_path column
                     const { error: dbError } = await supabase.from('Recordings').insert([
                         {
-                            title: videoTitleInput ? videoTitleInput.value : file.name,
-                            file_path: uploadedPath,
+                            title: videoTitleInput ? videoTitleInput.value : 'YouTube Recording',
+                            file_path: `youtube:${videoId}`, // Prefix to indicate it's a YouTube ID
                             access_level: accessLevel,
                             price: accessLevel === 'paid' && videoPriceInput ? parseFloat(videoPriceInput.value) : 0
                         }
                     ]);
+
                     if (dbError) {
                         console.error('Error saving recording to database:', dbError);
-                        alert(`File uploaded to R2, but failed to save to database. Check console.`);
+                        alert(`Failed to save recording to database. Check console.`);
                     } else {
-                        alert(`Recording Uploaded Successfully!\n(Path: ${uploadedPath})`);
+                        alert(`Recording Saved Successfully! (YouTube ID: ${videoId})`);
                         recordingForm.reset();
                     }
 
-                    if (previewContainer) {
-                        previewContainer.innerHTML = '';
-                        previewContainer.classList.add('hidden');
-                    }
                     const priceInput = document.getElementById('recording-price-input');
                     if (priceInput) priceInput.classList.add('hidden');
                 } catch (error) {
-                    alert('Failed to upload recording. Check console for details.');
+                    alert('Failed to save recording. Check console for details.');
                 } finally {
                     submitBtn.innerHTML = originalText;
                     submitBtn.disabled = false;
-                    if (progressContainer) {
-                        progressContainer.classList.add('hidden');
-                        if (progressBar) progressBar.style.width = '0%';
-                        if (progressText) progressText.textContent = '0%';
-                    }
                 }
             } else {
-                alert('Please select a video to upload.');
+                alert('Please enter a YouTube URL.');
             }
         });
     }
