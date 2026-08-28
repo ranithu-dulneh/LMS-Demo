@@ -211,9 +211,12 @@
                 <button id="close-video-modal" class="close-btn"><i class="fas fa-times"></i></button>
             </div>
 
-            <div class="custom-video-wrapper">
+            <div class="custom-video-wrapper" id="custom-video-wrapper">
                 <!-- The YouTube API will replace this div with the iframe -->
                 <div id="youtube-player-container"></div>
+
+                <!-- Invisible Overlay for Double Click Interactions -->
+                <div id="video-interaction-overlay" class="interaction-overlay"></div>
 
                 <!-- Custom Controls Overlay -->
                 <div class="custom-controls-overlay" id="custom-controls">
@@ -226,8 +229,12 @@
                     <div class="controls-toolbar">
                         <div class="controls-left">
                             <button id="btn-play-pause" class="control-btn"><i class="fas fa-play"></i></button>
-                            <button id="btn-skip-backward" class="control-btn"><i class="fas fa-undo"></i> 10s</button>
-                            <button id="btn-skip-forward" class="control-btn">10s <i class="fas fa-redo"></i></button>
+
+                            <div class="volume-container">
+                                <button id="btn-mute" class="control-btn"><i class="fas fa-volume-up"></i></button>
+                                <input type="range" id="volume-slider" class="volume-slider" min="0" max="100" value="100">
+                            </div>
+
                             <div class="time-display">
                                 <span id="time-current">0:00</span> / <span id="time-total">0:00</span>
                             </div>
@@ -243,6 +250,7 @@
                                     <option value="2">2x</option>
                                 </select>
                             </div>
+                            <button id="btn-fullscreen" class="control-btn"><i class="fas fa-expand"></i></button>
                         </div>
                     </div>
                 </div>

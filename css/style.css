@@ -854,6 +854,17 @@ input:focus, select:focus {
     pointer-events: none; /* Disable interactions directly with iframe to use custom controls */
 }
 
+/* Interaction Overlay for Double Click Skip */
+.interaction-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 60px); /* Leave room for controls to be hovered easily */
+    z-index: 10;
+    cursor: pointer;
+}
+
 /* Custom Controls */
 .custom-controls-overlay {
     position: absolute;
@@ -868,9 +879,48 @@ input:focus, select:focus {
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: auto; /* Re-enable pointer events for controls */
+    z-index: 20;
 }
 
 .custom-video-wrapper:hover .custom-controls-overlay {
+    opacity: 1;
+}
+
+/* Fullscreen handling */
+.custom-video-wrapper:fullscreen {
+    padding-bottom: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+.custom-video-wrapper:-webkit-full-screen {
+    padding-bottom: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+}
+
+/* Volume Slider */
+.volume-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.volume-slider {
+    width: 0px;
+    opacity: 0;
+    transition: width 0.3s, opacity 0.3s;
+    accent-color: var(--accent-blue);
+    cursor: pointer;
+}
+
+.volume-container:hover .volume-slider {
+    width: 80px;
     opacity: 1;
 }
 
