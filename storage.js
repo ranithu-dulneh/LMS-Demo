@@ -1,7 +1,7 @@
 import { supabase } from './auth.js';
 
 // IMPORTANT: Replace this with your actual deployed Cloudflare Worker URL
-const WORKER_URL = "https://lms-upload-worker.<YOUR_SUBDOMAIN>.workers.dev";
+const WORKER_URL = "https://lms-demo.ranithudulneth.workers.dev";
 
 /**
  * Uploads a file to Google Drive securely using a resumable upload session via a Cloudflare Worker.
