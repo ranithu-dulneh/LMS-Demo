@@ -221,44 +221,9 @@
                     <h2>Purchase Requests</h2>
                     <p>Review and approve student payment receipts.</p>
                 </div>
-                <div class="list-container">
-                    <!-- Request Item -->
-                    <div class="material-item">
-                        <div class="material-icon">
-                            <i class="fas fa-file-invoice-dollar" style="color: #0056b3;"></i>
-                        </div>
-                        <div class="material-info">
-                            <h3>Student: Kamal Perera</h3>
-                            <p class="meta">Item: Chemistry: Mole Concept (Recording) &bull; Amount: <strong>LKR 1000</strong></p>
-                            <a href="#" class="view-receipt-link" style="display: inline-block; margin-top: 5px; color: #0056b3; text-decoration: none;"><i class="fas fa-image"></i> View Uploaded Receipt</a>
-                        </div>
-                        <div class="material-action request-actions">
-                            <span class="badge" style="background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 4px; display: block; margin-bottom: 10px; text-align: center;">Pending</span>
-                            <div style="display: flex; gap: 5px;">
-                                <button class="btn btn-primary" style="background: #28a745; padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Access Granted')"><i class="fas fa-check"></i> Accept</button>
-                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Request Rejected')"><i class="fas fa-times"></i> Reject</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Request Item -->
-                    <div class="material-item">
-                        <div class="material-icon">
-                            <i class="fas fa-file-invoice-dollar" style="color: #0056b3;"></i>
-                        </div>
-                        <div class="material-info">
-                            <h3>Student: Nimal Fernando</h3>
-                            <p class="meta">Item: Mechanics Tute 2 (Material) &bull; Amount: <strong>LKR 500</strong></p>
-                            <a href="#" class="view-receipt-link" style="display: inline-block; margin-top: 5px; color: #0056b3; text-decoration: none;"><i class="fas fa-file-pdf"></i> View Uploaded Receipt</a>
-                        </div>
-                        <div class="material-action request-actions">
-                            <span class="badge" style="background: #fff3cd; color: #856404; padding: 5px 10px; border-radius: 4px; display: block; margin-bottom: 10px; text-align: center;">Pending</span>
-                            <div style="display: flex; gap: 5px;">
-                                <button class="btn btn-primary" style="background: #28a745; padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Access Granted')"><i class="fas fa-check"></i> Accept</button>
-                                <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.9rem;" onclick="alert('Request Rejected')"><i class="fas fa-times"></i> Reject</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="list-container" id="requests-list">
+                    <!-- Requests will be dynamically loaded here by data.js -->
+                    <p style="color: var(--text-muted);">Loading requests...</p>
                 </div>
             </section>
 
@@ -271,5 +236,7 @@
     <script type="module" src="auth.js"></script>
     <!-- Cloudflare R2 Storage Script -->
     <script type="module" src="storage.js"></script>
+    <!-- Dynamic Data Fetching Script -->
+    <script type="module" src="js/data.js"></script>
 </body>
 </html>
